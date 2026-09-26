@@ -151,6 +151,51 @@
     transition:background .25s ease;
   }
   .card > *{position:relative; z-index:2;}
+
+  /* Nutripure discount bubble */
+  .price-bubble{
+    position:absolute; top:-14px; right:-14px; z-index:5;
+    border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; line-height:1.05; color:#0a0a0b;
+    box-shadow:0 10px 22px -8px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.4);
+    border:1px solid rgba(255,255,255,.35);
+    pointer-events:none;
+  }
+  .price-bubble .pct{font-family:'Anton',sans-serif; font-size:1.05rem; letter-spacing:.01em;}
+  .price-bubble .lbl{font-size:.5rem; font-weight:700; text-transform:uppercase; letter-spacing:.03em; opacity:.85;}
+  .price-bubble.tier-10{
+    width:54px; height:54px;
+    background:radial-gradient(circle at 32% 28%, #f0e3c2, #cfd1d6 75%);
+  }
+  .price-bubble.tier-15{
+    width:62px; height:62px;
+    background:radial-gradient(circle at 32% 28%, #f4e3ad, #c9a24a 68%);
+    box-shadow:0 10px 24px -6px rgba(201,162,74,.5), inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  .price-bubble.tier-20{
+    width:70px; height:70px;
+    background:radial-gradient(circle at 32% 28%, #ffedb8, #e6cd8f 45%, #c9a24a 88%);
+    box-shadow:0 14px 30px -6px rgba(201,162,74,.75), inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .price-bubble.tier-20 .pct{font-size:1.2rem;}
+  @keyframes bubblePop{
+    0%{transform:scale(1); opacity:1;}
+    35%{transform:scale(1.4); opacity:1;}
+    100%{transform:scale(.15); opacity:0;}
+  }
+  @keyframes bubbleInflate{
+    0%{transform:scale(0); opacity:0;}
+    65%{transform:scale(1.2); opacity:1;}
+    100%{transform:scale(1); opacity:1;}
+  }
+  .price-bubble.pop{animation:bubblePop .38s ease forwards;}
+  .price-bubble.inflate{animation:bubbleInflate .45s cubic-bezier(.34,1.56,.64,1) both;}
+
+  .discount-note{
+    margin-top:28px; color:var(--muted); font-size:.85rem; border-left:2px solid var(--gold);
+    padding-left:14px;
+  }
+
   .card:hover, .card.pop{
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,.3),
@@ -339,6 +384,7 @@
     </div>
     <div class="cards">
       <div class="card">
+        <span class="price-bubble tier-10"><span class="pct">-10%</span><span class="lbl">Nutripure</span></span>
         <h3>Start</h3>
         <div class="price">79<sup>€ / mois</sup></div>
         <ul>
@@ -352,6 +398,7 @@
         <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Start à 79€/mois en coaching à distance. Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir Start</a>
       </div>
       <div class="card featured">
+        <span class="price-bubble tier-15"><span class="pct">-15%</span><span class="lbl">Nutripure</span></span>
         <h3>Pro</h3>
         <div class="price">119<sup>€ / mois</sup></div>
         <ul>
@@ -366,6 +413,7 @@
         <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Pro à 119€/mois en coaching à distance. Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir Pro</a>
       </div>
       <div class="card">
+        <span class="price-bubble tier-20"><span class="pct">-20%</span><span class="lbl">Nutripure</span></span>
         <h3>Premium</h3>
         <div class="price">159<sup>€ / mois</sup></div>
         <ul>
@@ -381,6 +429,7 @@
         <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Premium à 159€/mois en coaching à distance. Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir Premium</a>
       </div>
     </div>
+    <p class="note discount-note">Les pourcentages affichés (-10 %, -15 %, -20 %) correspondent à la remise sur tes compléments alimentaires Nutripure, réservée aux clients en suivi actif : plus la formule est complète, plus la remise est élevée. DB Coaching &amp; Nutrition est revendeur indépendant Nutripure — ces produits ne sont pas vendus en ligne sur ce site, la commande se fait directement avec ton coach, en suivi ou en présentiel.</p>
   </div>
 </section>
 
@@ -438,6 +487,7 @@
     </div>
     <div class="cards two">
       <div class="card">
+        <span class="price-bubble tier-15"><span class="pct">-15%</span><span class="lbl">Nutripure</span></span>
         <h3>Formule mixte</h3>
         <div class="price">149<sup>€ / mois</sup></div>
         <ul>
@@ -452,6 +502,7 @@
         <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule mixte à 149€/mois (2 séances en présentiel par mois + suivi à distance). Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir cette formule</a>
       </div>
       <div class="card featured">
+        <span class="price-bubble tier-20"><span class="pct">-20%</span><span class="lbl">Nutripure</span></span>
         <h3>Premium présentiel</h3>
         <div class="price">219<sup>€ / mois</sup></div>
         <ul>
@@ -467,6 +518,7 @@
       </div>
     </div>
     <p class="note">Les formules présentées n'incluent pas de programme alimentaire personnalisé ni de prescription nutritionnelle.</p>
+    <p class="note discount-note">Remise Nutripure incluse sur ces formules (-15 % / -20 %, voir ci-dessus) — revendeur indépendant, hors vente en ligne.</p>
   </div>
 </section>
 
@@ -521,7 +573,7 @@
     Adresse : 103 boulevard Jean-Baptiste Clément, 42300 Roanne<br>
     SIREN : 107575243 — SIRET : 10757524300012<br>
     Email : Db.coaching.nutrition@gmail.com<br>
-    Activité : coaching sportif et suivi de l'entraînement, à distance et en direct.</p>
+    Activité : coaching sportif et suivi de l'entraînement, à distance et en direct. Revendeur indépendant de compléments alimentaires Nutripure — conformément aux conditions du fournisseur, ces produits ne sont pas vendus en ligne sur ce site ; la vente s'effectue uniquement dans le cadre du suivi (présentiel ou échange direct).</p>
 
     <h4>Directeur de la publication</h4>
     <p>Dylan Bain, en qualité d'entrepreneur individuel.</p>
@@ -531,6 +583,10 @@
 
     <h4>Propriété intellectuelle</h4>
     <p>L'ensemble des éléments présents sur ce site (textes, logo, éléments graphiques) est protégé par les dispositions relatives à la propriété intellectuelle. Toute reproduction ou réutilisation sans autorisation préalable est interdite.</p>
+    <p>Les marques, logos et dénominations « Nutripure » sont la propriété de leurs titulaires respectifs. Leur présence sur ce site n'implique aucune qualité d'éditeur, de fabricant ou de site officiel de ces marques : ce site n'est pas le site officiel Nutripure.</p>
+
+    <h4>Vente de compléments alimentaires</h4>
+    <p>Les compléments alimentaires ne se substituent pas à une alimentation variée et équilibrée ni à un mode de vie sain. Ils ne sont pas des médicaments et ne sont pas destinés à traiter, prévenir ou guérir une maladie. Les conseils délivrés dans le cadre du coaching ne constituent pas une prescription médicale. Ces produits ne sont pas vendus en ligne sur ce site : toute commande s'effectue directement avec le coach, dans le cadre du suivi. Les remises indiquées (-10 %, -15 %, -20 % selon la formule) sont réservées aux clients en suivi actif et non cumulables.</p>
 
     <h4>Responsabilité</h4>
     <p>DB Coaching &amp; Nutrition s'efforce de fournir des informations exactes et à jour. Les prestations, disponibilités et tarifs sont susceptibles d'évoluer sans préavis. DB Coaching &amp; Nutrition ne saurait être tenu responsable d'un dommage résultant de l'utilisation du site ou d'une indisponibilité temporaire.</p>
@@ -649,7 +705,7 @@ legalModal.addEventListener('click', function(e){
     return maxH;
   }
 
-  function layout(container){
+  function layout(container, animateFrontBubble){
     var st = state.get(container);
     if(!st) return;
     var n = st.order.length;
@@ -663,6 +719,19 @@ legalModal.addEventListener('click', function(e){
         card.style.transform = 'translateY(0) scale(1) rotate(0deg)';
         card.style.opacity = '1';
         card.style.pointerEvents = 'auto';
+        if(animateFrontBubble){
+          var b = card.querySelector('.price-bubble');
+          if(b){
+            b.classList.remove('pop', 'inflate');
+            b.style.animation = '';
+            void b.offsetWidth; // restart animation cleanly
+            b.classList.add('inflate');
+            b.addEventListener('animationend', function done(){
+              b.classList.remove('inflate');
+              b.removeEventListener('animationend', done);
+            });
+          }
+        }
       } else if(i === 1){
         card.style.transition = 'transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease';
         card.style.transform = 'translateY(14px) scale(.95) rotate(-1.5deg)';
@@ -690,12 +759,18 @@ legalModal.addEventListener('click', function(e){
     if(!st || st.animating) return;
     st.animating = true;
     var front = st.order[0];
+    var bubble = front.querySelector('.price-bubble');
+    if(bubble){
+      bubble.classList.remove('inflate');
+      bubble.classList.add('pop');
+    }
     front.style.transition = 'transform .38s ease, opacity .38s ease';
     front.style.transform = 'translateX(' + (dir > 0 ? '130%' : '-130%') + ') rotate(' + (dir > 0 ? 16 : -16) + 'deg)';
     front.style.opacity = '0';
     setTimeout(function(){
+      if(bubble){ bubble.classList.remove('pop'); bubble.style.animation = ''; }
       st.order.push(st.order.shift());
-      layout(container);
+      layout(container, true);
       st.animating = false;
     }, 380);
   }
@@ -775,6 +850,8 @@ legalModal.addEventListener('click', function(e){
       c.style.position = ''; c.style.left = ''; c.style.right = ''; c.style.top = '';
       c.style.margin = ''; c.style.zIndex = ''; c.style.transform = ''; c.style.opacity = '';
       c.style.pointerEvents = ''; c.style.transition = ''; c.classList.remove('dragging');
+      var b = c.querySelector('.price-bubble');
+      if(b){ b.classList.remove('pop', 'inflate'); b.style.animation = ''; }
     });
     container.classList.remove('deck');
     container.style.display = ''; container.style.position = ''; container.style.height = '';
