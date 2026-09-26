@@ -742,7 +742,7 @@ legalModal.addEventListener('click', function(e){
   function buildDeck(container){
     var cards = Array.prototype.slice.call(container.querySelectorAll('.card'));
     if(cards.length < 2) return;
-    var order = cards.slice().sort(function(a, b){ return priceOf(b) - priceOf(a); });
+    var order = cards.slice().sort(function(a, b){ return priceOf(a) - priceOf(b); });
 
     container.classList.add('deck');
     container.style.display = 'block';
