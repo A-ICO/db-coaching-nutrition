@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VXQKHZN6BD"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-VXQKHZN6BD'); </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VXQKHZN6BD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VXQKHZN6BD');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DB Coaching & Nutrition</title>
@@ -115,19 +122,63 @@
   .sec-head h2{font-size:clamp(1.9rem,3.6vw,2.7rem); margin-bottom:14px;}
   .sec-head p{color:var(--muted); font-size:1.02rem;}
 
-  /* PRICING CARDS */
-  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  /* PRICING CARDS — liquid glass, 3D */
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; perspective:1400px;}
   .cards.two{grid-template-columns:repeat(2,1fr);}
   .card{
-    background:var(--card); border:1px solid var(--line); border-radius:18px;
+    background:linear-gradient(155deg, rgba(255,255,255,.07), rgba(255,255,255,.015) 55%, rgba(255,255,255,.03));
+    -webkit-backdrop-filter:blur(20px) saturate(150%);
+    backdrop-filter:blur(20px) saturate(150%);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:24px;
     padding:32px 28px; display:flex; flex-direction:column;
     position:relative;
+    transform-style:preserve-3d;
+    transform:perspective(900px) translateZ(0);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.22),
+      inset 0 -18px 30px -24px rgba(255,255,255,.08),
+      0 18px 40px -22px rgba(0,0,0,.7),
+      0 2px 5px rgba(0,0,0,.45);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s cubic-bezier(.2,.8,.2,1);
+    will-change:transform;
+    isolation:isolate;
   }
-  .card.featured{border-color:var(--gold); background:linear-gradient(180deg, rgba(201,162,74,.09), var(--card) 40%);}
-  .card.featured::before{
-    content:'Le plus choisi'; position:absolute; top:-13px; left:28px;
+  .card::before{
+    content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:1;
+    background:radial-gradient(240px 200px at var(--mx,25%) var(--my,-10%), rgba(255,255,255,.20), transparent 62%);
+    mix-blend-mode:screen;
+    transition:background .25s ease;
+  }
+  .card > *{position:relative; z-index:2;}
+  .card:hover, .card.pop{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.3),
+      inset 0 -18px 30px -24px rgba(255,255,255,.12),
+      0 34px 60px -24px rgba(0,0,0,.75),
+      0 3px 8px rgba(0,0,0,.5);
+  }
+  .card.featured{
+    border-color:rgba(201,162,74,.6);
+    background:linear-gradient(160deg, rgba(201,162,74,.26), rgba(23,23,27,.55) 55%, rgba(201,162,74,.08));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.28),
+      inset 0 -18px 30px -24px rgba(255,220,150,.16),
+      0 22px 48px -20px rgba(201,162,74,.4),
+      0 2px 6px rgba(0,0,0,.5);
+  }
+  .card.featured:hover, .card.featured.pop{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.32),
+      inset 0 -18px 30px -24px rgba(255,220,150,.22),
+      0 36px 68px -22px rgba(201,162,74,.5),
+      0 3px 8px rgba(0,0,0,.55);
+  }
+  .card.featured::after{
+    content:'Le plus choisi'; position:absolute; top:-13px; left:28px; z-index:3;
     background:var(--gold); color:#0a0a0b; font-size:.72rem; font-weight:800;
     padding:5px 12px; border-radius:100px;
+    box-shadow:0 6px 14px -6px rgba(201,162,74,.7);
   }
   .card h3{font-family:'Manrope',sans-serif; font-weight:800; font-size:1.15rem; margin-bottom:6px;}
   .price{font-family:'Anton',sans-serif; font-size:2.4rem; color:var(--gold); margin-bottom:2px;}
@@ -142,11 +193,22 @@
   }
   .card .pick{
     margin-top:26px; text-align:center; padding:13px; border-radius:100px;
-    border:1px solid var(--line); font-weight:700; font-size:.9rem;
+    border:1px solid rgba(255,255,255,.16); font-weight:700; font-size:.9rem;
+    background:rgba(255,255,255,.06);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 6px 14px -8px rgba(0,0,0,.5);
   }
-  .card.featured .pick{background:var(--gold); color:#0a0a0b; border-color:var(--gold);}
-  .card:hover .pick{border-color:var(--gold); color:var(--gold);}
-  .card.featured:hover .pick{color:#0a0a0b;}
+  .card.featured .pick{
+    background:var(--gold); color:#0a0a0b; border-color:var(--gold);
+    box-shadow:0 10px 20px -8px rgba(201,162,74,.65);
+  }
+  .card:hover .pick{border-color:var(--gold); color:var(--gold); transform:translateY(-2px);}
+  .card.featured:hover .pick{color:#0a0a0b; transform:translateY(-2px);}
+
+  .card.pop{transform:perspective(900px) translateZ(20px) scale(1.015);}
+  @media (hover:hover){
+    .cards .card{transform-origin:center;}
+  }
 
   .note{
     margin-top:36px; color:var(--muted); font-size:.85rem; border-left:2px solid var(--gold);
@@ -270,11 +332,11 @@
           <li>Bilan initial</li>
           <li>Programme d'entraînement personnalisé</li>
           <li>Suivi WhatsApp</li>
-          <li>Un ajustement du programme par mois</li>
+          <li>1 ajustement du programme par mois</li>
           <li>Bilan mensuel</li>
           <li>Conseils généraux sur l'hygiène de vie</li>
         </ul>
-        <a href="#contact" class="pick">Choisir Start</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Start à 79€/mois en coaching à distance. Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir Start</a>
       </div>
       <div class="card featured">
         <h3>Pro</h3>
@@ -288,7 +350,7 @@
           <li>Conseils sur l'hygiène de vie</li>
           <li>Conseils compléments alimentaires</li>
         </ul>
-        <a href="#contact" class="pick">Choisir Pro</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Pro à 119€/mois en coaching à distance. Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir Pro</a>
       </div>
       <div class="card">
         <h3>Premium</h3>
@@ -303,7 +365,7 @@
           <li>Échanges WhatsApp prioritaires</li>
           <li>1 rendez-vous coaching par mois</li>
         </ul>
-        <a href="#contact" class="pick">Choisir Premium</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Premium à 159€/mois en coaching à distance. Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir Premium</a>
       </div>
     </div>
   </div>
@@ -327,7 +389,7 @@
           <li>Correction des mouvements</li>
           <li>Adaptation au niveau et à l'objectif</li>
         </ul>
-        <a href="#contact" class="pick">Réserver une séance</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je souhaiterais réserver une séance de coaching en présentiel (40€, 1h). Quelles sont vos disponibilités ? Merci.">Réserver une séance</a>
       </div>
       <div class="card">
         <h3>Pack 4 séances</h3>
@@ -337,7 +399,7 @@
           <li>Suivi de progression</li>
           <li>Adaptation des exercices</li>
         </ul>
-        <a href="#contact" class="pick">Choisir le pack</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par le pack de 4 séances en présentiel (140€). Pourriez-vous me recontacter pour organiser la première séance ? Merci.">Choisir le pack</a>
       </div>
       <div class="card">
         <h3>Pack 8 séances</h3>
@@ -348,7 +410,7 @@
           <li>Progression structurée</li>
           <li>Ajustement du programme</li>
         </ul>
-        <a href="#contact" class="pick">Choisir le pack</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par le pack de 8 séances en présentiel (260€). Pourriez-vous me recontacter pour organiser la première séance ? Merci.">Choisir le pack</a>
       </div>
     </div>
   </div>
@@ -374,7 +436,7 @@
           <li>Conseils généraux en hygiène de vie</li>
           <li>Suivi WhatsApp</li>
         </ul>
-        <a href="#contact" class="pick">Choisir cette formule</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule mixte à 149€/mois (2 séances en présentiel par mois + suivi à distance). Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir cette formule</a>
       </div>
       <div class="card featured">
         <h3>Premium présentiel</h3>
@@ -388,7 +450,7 @@
           <li>Suivi des performances</li>
           <li>WhatsApp prioritaire</li>
         </ul>
-        <a href="#contact" class="pick">Choisir cette formule</a>
+        <a href="https://wa.me/33612949698" target="_blank" rel="noopener" class="pick" data-wa="Bonjour, je suis intéressé(e) par la formule Premium présentiel à 219€/mois (4 séances en présentiel par mois + suivi à distance). Pourriez-vous me recontacter pour organiser mon bilan initial ? Merci.">Choisir cette formule</a>
       </div>
     </div>
     <p class="note">Les formules présentées n'incluent pas de programme alimentaire personnalisé ni de prescription nutritionnelle.</p>
@@ -501,6 +563,52 @@ document.getElementById('closeLegal').addEventListener('click', function(){
 legalModal.addEventListener('click', function(e){
   if(e.target === legalModal) legalModal.classList.remove('open');
 });
+
+// Build real WhatsApp links with the pre-written message for each formula
+(function(){
+  document.querySelectorAll('.pick[data-wa]').forEach(function(a){
+    var msg = a.getAttribute('data-wa');
+    a.href = 'https://wa.me/33612949698?text=' + encodeURIComponent(msg);
+  });
+})();
+
+// Liquid-glass 3D tilt effect on pricing cards
+(function(){
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isTouch = window.matchMedia && window.matchMedia('(hover: none)').matches;
+  var cards = document.querySelectorAll('.cards .card');
+
+  if(reduceMotion){ return; }
+
+  cards.forEach(function(card){
+    if(isTouch){
+      card.addEventListener('touchstart', function(){
+        card.classList.add('pop');
+      }, {passive:true});
+      card.addEventListener('touchend', function(){
+        setTimeout(function(){ card.classList.remove('pop'); }, 260);
+      }, {passive:true});
+      return;
+    }
+    var rect = null;
+    function onMove(e){
+      if(!rect) rect = card.getBoundingClientRect();
+      var x = (e.clientX - rect.left) / rect.width;
+      var y = (e.clientY - rect.top) / rect.height;
+      var rx = (0.5 - y) * 10;
+      var ry = (x - 0.5) * 12;
+      card.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateZ(16px)';
+      card.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+      card.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+    }
+    card.addEventListener('mouseenter', function(){ rect = card.getBoundingClientRect(); });
+    card.addEventListener('mousemove', onMove);
+    card.addEventListener('mouseleave', function(){
+      rect = null;
+      card.style.transform = '';
+    });
+  });
+})();
 </script>
 
 </body>
