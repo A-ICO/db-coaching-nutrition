@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dbcoachingnutrition.fr/sitemap.xml
