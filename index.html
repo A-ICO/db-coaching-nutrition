@@ -275,6 +275,19 @@
     .reveal.d1{animation-delay:.08s;} .reveal.d2{animation-delay:.16s;} .reveal.d3{animation-delay:.24s;}
     @keyframes up{to{opacity:1; transform:none;}}
   }
+
+  /* Mobile card-deck (swipe to shuffle) — built by JS, phones only */
+  .cards.deck .card{cursor:grab; user-select:none;}
+  .cards.deck .card.dragging{cursor:grabbing;}
+  .deck-hint{
+    text-align:center; color:var(--muted); font-size:.8rem; margin-top:10px; letter-spacing:.01em;
+  }
+  .deck-dots{display:flex; justify-content:center; gap:8px; margin-top:12px;}
+  .deck-dots .dot{
+    width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.22);
+    transition:background .3s ease, transform .3s ease;
+  }
+  .deck-dots .dot.active{background:var(--gold); transform:scale(1.35);}
 </style>
 </head>
 <body>
@@ -608,6 +621,186 @@ legalModal.addEventListener('click', function(e){
       card.style.transform = '';
     });
   });
+})();
+
+// Mobile-only: turn each pricing grid into a swipeable card deck
+// (most expensive on top; swipe sends the front card to the back, like shuffling)
+(function(){
+  var BREAKPOINT = 640;
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.cards'));
+  var state = new Map();
+
+  function priceOf(card){
+    var el = card.querySelector('.price');
+    if(!el) return 0;
+    var digits = el.textContent.replace(/[^0-9]/g, '');
+    return parseInt(digits, 10) || 0;
+  }
+
+  function measureHeight(cards){
+    var maxH = 0;
+    cards.forEach(function(c){
+      var prevPos = c.style.position;
+      c.style.position = 'static';
+      var h = c.getBoundingClientRect().height;
+      if(h > maxH) maxH = h;
+      c.style.position = prevPos;
+    });
+    return maxH;
+  }
+
+  function layout(container){
+    var st = state.get(container);
+    if(!st) return;
+    var n = st.order.length;
+    st.order.forEach(function(card, i){
+      card.style.position = 'absolute';
+      card.style.left = '0'; card.style.right = '0'; card.style.top = '0';
+      card.style.margin = '0 auto';
+      card.style.zIndex = String(n - i);
+      if(i === 0){
+        card.style.transition = 'transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease';
+        card.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+        card.style.opacity = '1';
+        card.style.pointerEvents = 'auto';
+      } else if(i === 1){
+        card.style.transition = 'transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease';
+        card.style.transform = 'translateY(14px) scale(.95) rotate(-1.5deg)';
+        card.style.opacity = '.85';
+        card.style.pointerEvents = 'none';
+      } else if(i === 2){
+        card.style.transition = 'transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease';
+        card.style.transform = 'translateY(26px) scale(.9) rotate(1.5deg)';
+        card.style.opacity = '.55';
+        card.style.pointerEvents = 'none';
+      } else {
+        card.style.transition = 'none';
+        card.style.transform = 'translateY(30px) scale(.86)';
+        card.style.opacity = '0';
+        card.style.pointerEvents = 'none';
+      }
+    });
+    Array.prototype.forEach.call(st.dots.children, function(d, i){
+      d.classList.toggle('active', i === 0);
+    });
+  }
+
+  function shuffle(container, dir){
+    var st = state.get(container);
+    if(!st || st.animating) return;
+    st.animating = true;
+    var front = st.order[0];
+    front.style.transition = 'transform .38s ease, opacity .38s ease';
+    front.style.transform = 'translateX(' + (dir > 0 ? '130%' : '-130%') + ') rotate(' + (dir > 0 ? 16 : -16) + 'deg)';
+    front.style.opacity = '0';
+    setTimeout(function(){
+      st.order.push(st.order.shift());
+      layout(container);
+      st.animating = false;
+    }, 380);
+  }
+
+  function attachDrag(container){
+    var st = state.get(container);
+    var startX = 0, currentX = 0, dragging = false, front = null;
+
+    function onStart(e){
+      if(st.animating) return;
+      front = st.order[0];
+      dragging = true;
+      front.classList.add('dragging');
+      front.style.transition = 'none';
+      startX = currentX = (e.touches ? e.touches[0].clientX : e.clientX);
+    }
+    function onMove(e){
+      if(!dragging || !front) return;
+      currentX = (e.touches ? e.touches[0].clientX : e.clientX);
+      var dx = currentX - startX;
+      front.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 18) + 'deg)';
+    }
+    function onEnd(){
+      if(!dragging || !front) return;
+      dragging = false;
+      front.classList.remove('dragging');
+      var dx = currentX - startX;
+      if(Math.abs(dx) > 70){
+        shuffle(container, dx > 0 ? 1 : -1);
+      } else {
+        front.style.transition = 'transform .3s ease';
+        front.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+      }
+      front = null;
+    }
+    container.addEventListener('touchstart', onStart, {passive:true});
+    container.addEventListener('touchmove', onMove, {passive:true});
+    container.addEventListener('touchend', onEnd);
+    container.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+  }
+
+  function buildDeck(container){
+    var cards = Array.prototype.slice.call(container.querySelectorAll('.card'));
+    if(cards.length < 2) return;
+    var order = cards.slice().sort(function(a, b){ return priceOf(b) - priceOf(a); });
+
+    container.classList.add('deck');
+    container.style.display = 'block';
+    container.style.position = 'relative';
+    container.style.height = (measureHeight(cards) + 24) + 'px';
+
+    var hint = document.createElement('div');
+    hint.className = 'deck-hint';
+    hint.textContent = 'Glissez la carte pour voir les autres formules';
+    container.insertAdjacentElement('afterend', hint);
+
+    var dots = document.createElement('div');
+    dots.className = 'deck-dots';
+    order.forEach(function(){
+      var d = document.createElement('span');
+      d.className = 'dot';
+      dots.appendChild(d);
+    });
+    hint.insertAdjacentElement('afterend', dots);
+
+    state.set(container, { cards: cards, order: order, hint: hint, dots: dots, animating: false });
+    layout(container);
+    attachDrag(container);
+  }
+
+  function destroyDeck(container){
+    var st = state.get(container);
+    if(!st) return;
+    st.cards.forEach(function(c){
+      c.style.position = ''; c.style.left = ''; c.style.right = ''; c.style.top = '';
+      c.style.margin = ''; c.style.zIndex = ''; c.style.transform = ''; c.style.opacity = '';
+      c.style.pointerEvents = ''; c.style.transition = ''; c.classList.remove('dragging');
+    });
+    container.classList.remove('deck');
+    container.style.display = ''; container.style.position = ''; container.style.height = '';
+    if(st.hint && st.hint.parentNode) st.hint.parentNode.removeChild(st.hint);
+    if(st.dots && st.dots.parentNode) st.dots.parentNode.removeChild(st.dots);
+    state.delete(container);
+  }
+
+  function apply(){
+    var isMobile = window.innerWidth <= BREAKPOINT;
+    groups.forEach(function(container){
+      var has = state.has(container);
+      if(isMobile && !has){
+        buildDeck(container);
+      } else if(!isMobile && has){
+        destroyDeck(container);
+      } else if(isMobile && has){
+        var st = state.get(container);
+        container.style.height = (measureHeight(st.cards) + 24) + 'px';
+      }
+    });
+  }
+
+  window.addEventListener('resize', apply);
+  window.addEventListener('orientationchange', apply);
+  apply();
 })();
 </script>
 
