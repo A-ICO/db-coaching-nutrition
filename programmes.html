@@ -88,8 +88,6 @@
 }
 #bf-prog .bf-btn:hover{filter:brightness(1.08)}
 #bf-prog .bf-err{margin:10px 0 0;min-height:1.4em;font-size:.9rem;font-weight:600;color:var(--accent)}
-#bf-prog .bf-relock{all:unset;cursor:pointer;margin-top:18px;font-size:.85rem;color:var(--muted);text-decoration:underline}
-#bf-prog .bf-relock:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 #bf-prog .bf-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:18px}
 #bf-prog .bf-pdf-btn{
   all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
@@ -209,7 +207,6 @@
     html += '<p class="bf-note"><strong>'+esc(data.note[0])+'</strong>'+esc(data.note[1])+'</p>';
     html += '<div class="bf-actions">'
       +'<button type="button" class="bf-pdf-btn" data-pdf="1">Télécharger en PDF</button>'
-      +'<button type="button" class="bf-relock" data-relock="1">Reverrouiller ce programme</button>'
       +'</div>';
     return html;
   }
@@ -410,9 +407,6 @@
       downloadPdf(P[current]);
       return;
     }
-    if(!e.target.closest("[data-relock]")) return;
-    delete unlocked[P[current].id]; save();
-    renderTabs(); renderPanel();
   });
 
   select(0,false);
