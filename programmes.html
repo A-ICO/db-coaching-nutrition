@@ -274,6 +274,11 @@
           unlocked[p.id] = res.data.program; save();
           renderTabs(); renderPanel();
           panel.focus();
+        } else if(res.data && res.data.error === "code_already_used"){
+          err.textContent = "Ce code a déjà été utilisé. Contacte Dylan pour en obtenir un nouveau.";
+          if(btn) btn.disabled = false;
+          input.classList.remove("bf-shake"); void input.offsetWidth; input.classList.add("bf-shake");
+          input.select();
         } else {
           err.textContent = "Code incorrect. Vérifie-le et réessaie.";
           if(btn) btn.disabled = false;
