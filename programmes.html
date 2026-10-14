@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ===== Tout est limité à #bf-prog : collez le bloc dans votre site sans conflit ===== */
 #bf-prog{
@@ -89,6 +90,13 @@
 #bf-prog .bf-err{margin:10px 0 0;min-height:1.4em;font-size:.9rem;font-weight:600;color:var(--accent)}
 #bf-prog .bf-relock{all:unset;cursor:pointer;margin-top:18px;font-size:.85rem;color:var(--muted);text-decoration:underline}
 #bf-prog .bf-relock:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#bf-prog .bf-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:18px}
+#bf-prog .bf-pdf-btn{
+  all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
+  background:#0a0a0b;color:#c9a24a;font-weight:800;font-size:.85rem;border-radius:999px;border:1.5px solid #c9a24a;
+}
+#bf-prog .bf-pdf-btn:hover{background:#c9a24a;color:#0a0a0b}
+#bf-prog .bf-pdf-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @keyframes bf-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 #bf-prog .bf-shake{animation:bf-shake .3s}
 @media (prefers-reduced-motion:reduce){#bf-prog .bf-shake{animation:none}}
@@ -199,8 +207,114 @@
         +'</ul></div>';
     });
     html += '<p class="bf-note"><strong>'+esc(data.note[0])+'</strong>'+esc(data.note[1])+'</p>';
-    html += '<button type="button" class="bf-relock" data-relock="1">Reverrouiller ce programme</button>';
+    html += '<div class="bf-actions">'
+      +'<button type="button" class="bf-pdf-btn" data-pdf="1">Télécharger en PDF</button>'
+      +'<button type="button" class="bf-relock" data-relock="1">Reverrouiller ce programme</button>'
+      +'</div>';
     return html;
+  }
+
+  /* Génère un PDF du programme débloqué, aux couleurs du site (noir + doré) */
+  function downloadPdf(p){
+    var data = unlocked[p.id];
+    if(!data || !window.jspdf) return;
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit:"pt", format:"a4" });
+    var pageW = doc.internal.pageSize.getWidth();
+    var pageH = doc.internal.pageSize.getHeight();
+    var margin = 40;
+    var gold = [201,162,74];
+    var dark = [10,10,11];
+    var ink = [21,24,29];
+    var muted = [91,95,102];
+    var y = 0;
+
+    function ensureSpace(h){
+      if(y + h > pageH - 50){
+        doc.addPage();
+        drawHeader(true);
+      }
+    }
+    function drawHeader(isContinuation){
+      doc.setFillColor(dark[0],dark[1],dark[2]);
+      doc.rect(0,0,pageW,70,"F");
+      doc.setTextColor(gold[0],gold[1],gold[2]);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(18);
+      doc.text(isContinuation ? p.name+" (suite)" : p.name, margin, 44);
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9);
+      doc.setTextColor(230,205,143);
+      doc.text("DB Coaching & Nutrition", margin, 58);
+      y = 95;
+    }
+
+    drawHeader(false);
+
+    doc.setTextColor(ink[0],ink[1],ink[2]);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(10.5);
+    var goalLines = doc.splitTextToSize(p.goal, pageW - margin*2);
+    doc.text(goalLines, margin, y);
+    y += goalLines.length * 13 + 14;
+
+    data.sessions.forEach(function(s){
+      ensureSpace(60);
+      doc.setFillColor(247,246,242);
+      doc.setDrawColor(201,162,74);
+      doc.roundedRect(margin, y, pageW - margin*2, 24, 3, 3, "FD");
+      doc.setTextColor(ink[0],ink[1],ink[2]);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(11);
+      doc.text(s.t + (s.d ? "  —  " + s.d : ""), margin + 10, y + 16);
+      y += 24;
+
+      var colX = [margin + 10, margin + 300, margin + 400];
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(8.5);
+      doc.setTextColor(muted[0],muted[1],muted[2]);
+      ensureSpace(18);
+      doc.text("EXERCICE", colX[0], y + 12);
+      doc.text("SERIES x REPS", colX[1], y + 12);
+      doc.text("REPOS", colX[2], y + 12);
+      y += 16;
+      doc.setDrawColor(203,200,191);
+      doc.line(margin, y, pageW - margin, y);
+
+      s.r.forEach(function(row){
+        ensureSpace(20);
+        y += 16;
+        doc.setFont("helvetica","normal");
+        doc.setFontSize(9.5);
+        doc.setTextColor(ink[0],ink[1],ink[2]);
+        var nameLines = doc.splitTextToSize(row[0], 250);
+        doc.text(nameLines, colX[0], y);
+        doc.setFont("helvetica","bold");
+        doc.text(String(row[1]), colX[1], y);
+        doc.setFont("helvetica","normal");
+        doc.setTextColor(muted[0],muted[1],muted[2]);
+        doc.text(String(row[2]), colX[2], y);
+        y += Math.max(0, (nameLines.length-1) * 11);
+      });
+      y += 18;
+    });
+
+    ensureSpace(60);
+    doc.setFillColor(247,246,242);
+    doc.setDrawColor(201,162,74);
+    doc.rect(margin, y, 3, 40, "F");
+    doc.setFillColor(247,246,242);
+    doc.rect(margin+3, y, pageW - margin*2 - 3, 40, "F");
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(10);
+    doc.setTextColor(ink[0],ink[1],ink[2]);
+    doc.text(data.note[0], margin + 14, y + 16);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9.5);
+    var noteLines = doc.splitTextToSize(data.note[1], pageW - margin*2 - 24);
+    doc.text(noteLines, margin + 14, y + 30);
+
+    doc.save("DB-Coaching-" + p.name.replace(/\s+/g,"-") + ".pdf");
   }
 
   function waCodeLink(p){
@@ -292,6 +406,10 @@
       });
   });
   panel.addEventListener("click", function(e){
+    if(e.target.closest("[data-pdf]")){
+      downloadPdf(P[current]);
+      return;
+    }
     if(!e.target.closest("[data-relock]")) return;
     delete unlocked[P[current].id]; save();
     renderTabs(); renderPanel();
