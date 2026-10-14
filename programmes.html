@@ -128,194 +128,41 @@
 
 <script>
 (function(){
+  /* Contenu public uniquement : les séances/notes ne sont plus ici,
+     elles sont sur un service externe et ne sont envoyées qu'après
+     un code correct (voir fetch vers WORKER_URL plus bas). */
+  var WORKER_URL = "https://ancient-cloud-d9ed.dylanbain42.workers.dev/";
+
   var P = [
     {
-      id:"mutant-mass", h:"jikt1y17s9", name:"Mutant Mass", sub:"Prise de masse",
+      id:"mutant-mass", name:"Mutant Mass", sub:"Prise de masse",
       goal:"Gagner du muscle avec un split haut/bas répété deux fois par semaine.",
-      meta:["Prise de masse","4 séances / semaine","Intermédiaire"],
-      sessions:[
-        {t:"Haut A", d:"Force + volume", r:[
-          ["Développé couché (barre guidée)","4 × 6-8","2 min"],
-          ["Tirage vertical","4 × 8-10","1 min 30"],
-          ["Développé épaules haltères","3 × 8-10","1 min 30"],
-          ["Rowing poulie basse","3 × 10","1 min 30"],
-          ["Curl haltères","3 × 12","1 min"],
-          ["Extension triceps poulie","3 × 12","1 min"]]},
-        {t:"Bas A", d:"Quadriceps et chaîne postérieure", r:[
-          ["Squat (barre guidée)","4 × 6-8","2 min 30"],
-          ["Presse à cuisses","3 × 10","2 min"],
-          ["Soulevé de terre roumain","3 × 8-10","2 min"],
-          ["Leg curl","3 × 12","1 min 30"],
-          ["Mollets debout","4 × 15","1 min"]]},
-        {t:"Haut B", d:"Volume + isolation", r:[
-          ["Développé incliné haltères","4 × 8-10","2 min"],
-          ["Tractions assistées","4 × 8","2 min"],
-          ["Élévations latérales","4 × 12-15","1 min"],
-          ["Pec deck","3 × 12","1 min"],
-          ["Face pull","3 × 15","1 min"],
-          ["Curl marteau","3 × 12","1 min"]]},
-        {t:"Bas B", d:"Jambes et fessiers", r:[
-          ["Hack squat ou presse","4 × 8-10","2 min"],
-          ["Fentes marchées","3 × 10 / jambe","1 min 30"],
-          ["Leg extension","3 × 12-15","1 min"],
-          ["Hip thrust","3 × 10","1 min 30"],
-          ["Mollets assis","4 × 15","1 min"]]}
-      ],
-      note:["Progression","Dès que tu atteins le haut de la fourchette de répétitions sur toutes les séries, ajoute 2,5 kg à la séance suivante."]
+      meta:["Prise de masse","4 séances / semaine","Intermédiaire"]
     },
     {
-      id:"paranoia", h:"98pzrgvnwz", name:"Paranoïa", sub:"Force et intensité",
+      id:"paranoia", name:"Paranoïa", sub:"Force et intensité",
       goal:"Charges lourdes sur les mouvements de base, puis finition en drop-set pour pousser le muscle à bout.",
-      meta:["Force / intensité","4 séances / semaine","Intermédiaire à avancé"],
-      sessions:[
-        {t:"Pecs et triceps", d:"", r:[
-          ["Développé couché","5 × 5","3 min"],
-          ["Développé incliné haltères","4 × 6","2 min"],
-          ["Dips","3 × 8","2 min"],
-          ["Barre au front","3 × 10","1 min 30"],
-          ["Triceps poulie (drop-set)","1 × max","—"]]},
-        {t:"Dos et biceps", d:"", r:[
-          ["Rowing barre","5 × 5","3 min"],
-          ["Tirage vertical prise serrée","4 × 6-8","2 min"],
-          ["Rowing haltère","3 × 8","1 min 30"],
-          ["Curl barre","3 × 8","1 min 30"],
-          ["Curl poulie (drop-set)","1 × max","—"]]},
-        {t:"Jambes", d:"", r:[
-          ["Squat","5 × 5","3 min"],
-          ["Soulevé de terre roumain","4 × 6","2 min 30"],
-          ["Presse à cuisses","3 × 10","2 min"],
-          ["Leg curl","3 × 10","1 min 30"],
-          ["Mollets debout","4 × 12","1 min"]]},
-        {t:"Épaules et bras", d:"", r:[
-          ["Développé militaire","5 × 5","3 min"],
-          ["Élévations latérales","4 × 12","1 min"],
-          ["Oiseau (pec deck inversé)","3 × 15","1 min"],
-          ["Curl incliné haltères","3 × 10","1 min 30"],
-          ["Triceps corde","3 × 12","1 min"],
-          ["Drop-set sur la dernière série","1 × max","—"]]}
-      ],
-      note:["Drop-set","À l'échec, baisse la charge de 20 à 30 % et enchaîne sans repos jusqu'à l'échec à nouveau."]
+      meta:["Force / intensité","4 séances / semaine","Intermédiaire à avancé"]
     },
     {
-      id:"noxplod", h:"1a0e80uzmfz", name:"NoxPlod", sub:"Explosivité et puissance",
+      id:"noxplod", name:"NoxPlod", sub:"Explosivité et puissance",
       goal:"Gagner en puissance avec des mouvements rapides et des sauts, en corps entier.",
-      meta:["Explosivité","3 séances / semaine","Intermédiaire"],
-      sessions:[
-        {t:"Séance 1", d:"Bas du corps dominant", r:[
-          ["Squat (barre guidée), montée rapide","5 × 3","3 min"],
-          ["Développé couché, poussée rapide","5 × 3","3 min"],
-          ["Tirage vertical","4 × 6","2 min"],
-          ["Box jumps","3 × 8","1 min 30"],
-          ["Gainage","3 × 45 s","1 min"]]},
-        {t:"Séance 2", d:"Chaîne postérieure", r:[
-          ["Soulevé de terre roumain","4 × 4","3 min"],
-          ["Développé militaire","4 × 5","2 min 30"],
-          ["Rowing","4 × 6","2 min"],
-          ["Kettlebell swing","4 × 12","1 min 30"],
-          ["Pompes explosives","3 × 6","1 min 30"]]},
-        {t:"Séance 3", d:"Unilatéral et haut du corps", r:[
-          ["Presse à cuisses","4 × 6","2 min 30"],
-          ["Fentes sautées","3 × 8 / jambe","1 min 30"],
-          ["Développé incliné haltères","4 × 6","2 min"],
-          ["Tractions","4 × max","2 min"],
-          ["Roulette abdominale","3 × 10","1 min"]]}
-      ],
-      note:["Règle d'or","Descente contrôlée, montée aussi vite que possible. Repose-toi complètement : la qualité de chaque répétition compte plus que le volume."]
+      meta:["Explosivité","3 séances / semaine","Intermédiaire"]
     },
     {
-      id:"skyzoid", h:"9ixzyeq1tr", name:"Skyzoïd", sub:"Esthétique, épaules et dos larges",
+      id:"skyzoid", name:"Skyzoïd", sub:"Esthétique, épaules et dos larges",
       goal:"Dessiner une silhouette en V : dos large, épaules rondes, taille fine, avec un travail soigné sur chaque groupe.",
-      meta:["Esthétique","5 séances / semaine","Intermédiaire"],
-      sessions:[
-        {t:"Dos", d:"", r:[
-          ["Tractions","4 × 8","2 min"],
-          ["Tirage vertical","4 × 10","1 min 30"],
-          ["Rowing poulie","3 × 10","1 min 30"],
-          ["Pull-over poulie","3 × 12","1 min"],
-          ["Shrugs haltères","3 × 12","1 min"]]},
-        {t:"Pecs", d:"", r:[
-          ["Développé incliné haltères","4 × 8-10","2 min"],
-          ["Développé couché (barre guidée)","3 × 10","2 min"],
-          ["Pec deck","3 × 12-15","1 min"],
-          ["Écartés poulie","3 × 15","1 min"],
-          ["Pompes","2 × max","1 min"]]},
-        {t:"Jambes", d:"", r:[
-          ["Squat (barre guidée)","4 × 10","2 min"],
-          ["Presse à cuisses","3 × 12","2 min"],
-          ["Soulevé de terre roumain","3 × 10","2 min"],
-          ["Leg extension","3 × 15","1 min"],
-          ["Leg curl","3 × 15","1 min"]]},
-        {t:"Épaules", d:"Priorité aux élévations latérales", r:[
-          ["Développé épaules machine","4 × 10","1 min 30"],
-          ["Élévations latérales","5 × 15","45 s"],
-          ["Oiseau poulie","4 × 15","1 min"],
-          ["Élévations frontales","3 × 12","1 min"],
-          ["Face pull","3 × 15","1 min"]]},
-        {t:"Bras et abdos", d:"", r:[
-          ["Curl barre","3 × 10","1 min 30"],
-          ["Triceps poulie","3 × 12","1 min"],
-          ["Curl marteau","3 × 12","1 min"],
-          ["Barre au front","3 × 12","1 min"],
-          ["Relevés de jambes","3 × 15","1 min"],
-          ["Crunch poulie","3 × 15","1 min"]]}
-      ],
-      note:["Technique","Tempo lent (2 s en descente), contraction maintenue 1 s en fin de mouvement. Le muscle doit travailler, pas l'élan."]
+      meta:["Esthétique","5 séances / semaine","Intermédiaire"]
     },
     {
-      id:"xtremburner", h:"17acmwm8p0f", name:"XtremBurner", sub:"Sèche et définition",
+      id:"xtremburner", name:"XtremBurner", sub:"Sèche et définition",
       goal:"Garder le muscle tout en brûlant un maximum de calories, avec des supersets et une séance de HIIT.",
-      meta:["Sèche","4 séances / semaine","Tous niveaux"],
-      sessions:[
-        {t:"Full body A", d:"Supersets, repos 45 s entre chaque", r:[
-          ["Presse à cuisses + Tirage vertical","3 × 15 + 15","45 s"],
-          ["Développé haltères + Rowing poulie","3 × 12 + 12","45 s"],
-          ["Fentes + Élévations latérales","3 × 12 + 15","45 s"],
-          ["Gainage","3 × 45 s","30 s"]]},
-        {t:"Full body B", d:"Supersets, repos 45 s entre chaque", r:[
-          ["Goblet squat + Pompes","3 × 15 + max","45 s"],
-          ["Soulevé de terre roumain haltères + Développé militaire","3 × 12 + 12","45 s"],
-          ["Leg curl + Curl / triceps poulie","3 × 15 + 15","45 s"],
-          ["Relevés de jambes","3 × 15","30 s"]]},
-        {t:"Full body C", d:"Supersets, repos 45 s entre chaque", r:[
-          ["Hip thrust + Tirage horizontal","3 × 15 + 12","45 s"],
-          ["Leg extension + Pec deck","3 × 15 + 15","45 s"],
-          ["Mollets + Crunch poulie","3 × 20 + 15","45 s"],
-          ["Rameur, finisher","10 min","—"]]},
-        {t:"HIIT", d:"Vélo ou tapis", r:[
-          ["Échauffement","5 min","—"],
-          ["30 s rapide / 60 s lent","10 tours","—"],
-          ["Retour au calme","5 min","—"]]}
-      ],
-      note:["Au quotidien","Vise 8 000 à 10 000 pas par jour pour soutenir la dépense sans fatiguer davantage les muscles."]
+      meta:["Sèche","4 séances / semaine","Tous niveaux"]
     },
     {
-      id:"killburn", h:"33xs5oqcyz", name:"KillBurn", sub:"Circuit brûle-graisse",
+      id:"killburn", name:"KillBurn", sub:"Circuit brûle-graisse",
       goal:"Des circuits rapides qui font monter le cœur : 40 secondes d'effort, 20 secondes de pause, sans temps mort.",
-      meta:["Brûle-graisse","3 séances / semaine","Tous niveaux"],
-      sessions:[
-        {t:"Circuit A", d:"4 tours, 1 min de repos entre les tours", r:[
-          ["Goblet squat","40 s","20 s"],
-          ["Pompes","40 s","20 s"],
-          ["Rowing haltère","40 s","20 s"],
-          ["Fentes alternées","40 s","20 s"],
-          ["Mountain climbers","40 s","20 s"],
-          ["Rameur","40 s","20 s"]]},
-        {t:"Circuit B", d:"4 tours, 1 min de repos entre les tours", r:[
-          ["Kettlebell swing","40 s","20 s"],
-          ["Développé épaules haltères","40 s","20 s"],
-          ["Tirage poulie","40 s","20 s"],
-          ["Presse à cuisses légère","40 s","20 s"],
-          ["Burpees","40 s","20 s"],
-          ["Vélo","40 s","20 s"]]},
-        {t:"Circuit C", d:"4 tours, 1 min de repos entre les tours", r:[
-          ["Step-ups","40 s","20 s"],
-          ["Développé machine pecs","40 s","20 s"],
-          ["Rowing machine","40 s","20 s"],
-          ["Hip thrust","40 s","20 s"],
-          ["Planche","40 s","20 s"],
-          ["Tapis incliné","40 s","20 s"]]}
-      ],
-      note:["Finisher","Termine chaque séance par 15 minutes de cardio incliné à allure soutenue mais tenable."]
+      meta:["Brûle-graisse","3 séances / semaine","Tous niveaux"]
     }
   ];
 
@@ -323,23 +170,11 @@
   var panel = document.getElementById("bf-panel");
   var current = 0;
   var STORE = "bf-prog-unlocked";
+  /* unlocked[id] = { sessions, note } une fois le code validé par le serveur */
   var unlocked = {};
 
   try { unlocked = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch(e){ unlocked = {}; }
   function save(){ try { localStorage.setItem(STORE, JSON.stringify(unlocked)); } catch(e){} }
-
-  /* Empreinte (le code n'apparaît pas en clair dans la page) */
-  function hash(str){
-    var h1 = 0xdeadbeef, h2 = 0x41c6ce57;
-    for (var i = 0, ch; i < str.length; i++){
-      ch = str.charCodeAt(i);
-      h1 = Math.imul(h1 ^ ch, 2654435761);
-      h2 = Math.imul(h2 ^ ch, 1597334677);
-    }
-    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
-  }
 
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
@@ -355,14 +190,15 @@
   }
 
   function sessionsHtml(p){
+    var data = unlocked[p.id];
     var html = "";
-    p.sessions.forEach(function(s){
+    data.sessions.forEach(function(s){
       html += '<div class="bf-session"><h4>'+esc(s.t)+(s.d?'<span>'+esc(s.d)+'</span>':'')+'</h4>'
         +'<ul class="bf-rows"><li class="bf-row bf-colhead" aria-hidden="true"><span>Exercice</span><span>Séries × reps</span><span>Repos</span></li>'
         +s.r.map(function(r){return '<li class="bf-row"><span class="bf-ex">'+esc(r[0])+'</span><span class="bf-sets">'+esc(r[1])+'</span><span class="bf-rest">'+esc(r[2])+'</span></li>'}).join("")
         +'</ul></div>';
     });
-    html += '<p class="bf-note"><strong>'+esc(p.note[0])+'</strong>'+esc(p.note[1])+'</p>';
+    html += '<p class="bf-note"><strong>'+esc(data.note[0])+'</strong>'+esc(data.note[1])+'</p>';
     html += '<button type="button" class="bf-relock" data-relock="1">Reverrouiller ce programme</button>';
     return html;
   }
@@ -420,17 +256,35 @@
     var p = P[current];
     var input = document.getElementById("bf-code");
     var err = document.getElementById("bf-err");
+    var btn = panel.querySelector(".bf-btn[type=submit]");
     var val = input.value.trim().toUpperCase();
     if(!val){ err.textContent = "Entre ton code."; input.focus(); return; }
-    if(hash(val) === p.h){
-      unlocked[p.id] = true; save();
-      renderTabs(); renderPanel();
-      panel.focus();
-    } else {
-      err.textContent = "Code incorrect. Vérifie-le et réessaie.";
-      input.classList.remove("bf-shake"); void input.offsetWidth; input.classList.add("bf-shake");
-      input.select();
-    }
+
+    err.textContent = "Vérification...";
+    if(btn) btn.disabled = true;
+
+    fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ programId: p.id, code: val })
+    })
+      .then(function(r){ return r.json().then(function(data){ return { status:r.status, data:data }; }); })
+      .then(function(res){
+        if(res.data && res.data.ok){
+          unlocked[p.id] = res.data.program; save();
+          renderTabs(); renderPanel();
+          panel.focus();
+        } else {
+          err.textContent = "Code incorrect. Vérifie-le et réessaie.";
+          if(btn) btn.disabled = false;
+          input.classList.remove("bf-shake"); void input.offsetWidth; input.classList.add("bf-shake");
+          input.select();
+        }
+      })
+      .catch(function(){
+        err.textContent = "Connexion impossible. Vérifie ta connexion et réessaie.";
+        if(btn) btn.disabled = false;
+      });
   });
   panel.addEventListener("click", function(e){
     if(!e.target.closest("[data-relock]")) return;
