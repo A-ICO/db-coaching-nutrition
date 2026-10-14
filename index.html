@@ -103,7 +103,7 @@
     border-bottom:1px solid var(--line);
   }
   nav{
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; flex-wrap:wrap; row-gap:10px; align-items:center; justify-content:space-between;
     padding:12px 24px; max-width:1100px; margin:0 auto;
   }
   .brand{display:flex; align-items:center; gap:10px;}
@@ -131,6 +131,10 @@
     transition:transform .15s ease, background .2s;
   }
   .navcta-alt:hover{background:#ff7f49;}
+  @media (max-width:600px){
+    .nav-ctas{flex-direction:column; align-items:stretch; gap:8px;}
+    .navcta, .navcta-alt{text-align:center;}
+  }
   @media (max-width:480px){
     .nav-ctas{gap:6px;}
     .navcta, .navcta-alt{padding:9px 12px; font-size:.74rem;}
@@ -442,8 +446,8 @@
       <a href="#contact" data-sec="contact">Contact</a>
     </div>
     <div class="nav-ctas">
-      <a href="programmes.html" class="navcta-alt">Déverrouille ton programme</a>
       <a href="https://wa.me/33612949698?text=Bonjour%20Dylan%2C%20je%20souhaite%20r%C3%A9server%20mon%20bilan%20gratuit%20avec%20DB%20Coaching%20%26%20Nutrition%20%21" target="_blank" rel="noopener" class="navcta">Bilan offert</a>
+      <a href="programmes.html" class="navcta-alt">Déverrouille ton programme</a>
     </div>
   </nav>
 </header>
